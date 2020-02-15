@@ -17,9 +17,12 @@ public class SpawnGroupController : MonoBehaviour
     [SerializeField] WayPointPath mPath;
     private float mNextSpawnTime;
 
+    Team team;
+
     // Start is called before the first frame update
     void Start()
     {
+        team = GetComponent<Team>();
         mNextSpawnTime = mFirstSpawnTime;
     }
 
@@ -31,6 +34,7 @@ public class SpawnGroupController : MonoBehaviour
             foreach (var spawner in mSpawners)
             {
                 var enemy = Instantiate(spawner.enemyType, spawner.spawnMarker).GetComponent<EnemyController>();
+                enemy.GetComponent<Team>().faction = team.faction;
                 enemy.Start();
                 enemy.SetPath(mPath);
             }
