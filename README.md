@@ -1,2 +1,4 @@
 # MOBA_Portal
-A MOBA demo game
+A MOBA Prototype made in Unity 2019 
+
+![Main scene](images/main.png)
