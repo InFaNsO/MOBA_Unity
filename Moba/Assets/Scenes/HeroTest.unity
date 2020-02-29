@@ -329,7 +329,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11a3dd818c0fe9e4b89d020f800217ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 20
+  maxHealth: 50
 --- !u!1 &1079178210
 GameObject:
   m_ObjectHideFlags: 0
@@ -500,7 +500,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1091237981}
   m_LocalRotation: {x: 0.28287333, y: -0, z: -0, w: 0.9591573}
-  m_LocalPosition: {x: -4.8, y: 10.31, z: -32.55}
+  m_LocalPosition: {x: -0.5, y: 5.5, z: -9.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -534,7 +534,7 @@ PrefabInstance:
     - target: {fileID: 8146971894251229718, guid: 8b703a76359f92f47960ea97cb99b871,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15.529854
+      value: -5.67
       objectReference: {fileID: 0}
     - target: {fileID: 8146971894251229718, guid: 8b703a76359f92f47960ea97cb99b871,
         type: 3}
@@ -544,7 +544,7 @@ PrefabInstance:
     - target: {fileID: 8146971894251229718, guid: 8b703a76359f92f47960ea97cb99b871,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -13.05027
+      value: -0.48
       objectReference: {fileID: 0}
     - target: {fileID: 8146971894251229718, guid: 8b703a76359f92f47960ea97cb99b871,
         type: 3}
@@ -590,6 +590,11 @@ PrefabInstance:
         type: 3}
       propertyPath: maxHealth
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4280892989769637014, guid: 8b703a76359f92f47960ea97cb99b871,
+        type: 3}
+      propertyPath: damageAmount
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b703a76359f92f47960ea97cb99b871, type: 3}

@@ -142,12 +142,16 @@ public class HeroController : MonoBehaviour
     }
     private void UpdateMove()
     {
-        if(!mAgent.pathPending && mAgent.remainingDistance <= mAgent.stoppingDistance)
+        if (!mAgent.pathPending && mAgent.remainingDistance <= mAgent.stoppingDistance)
+        {
             mCurrentState = State.Idle;
+            mAnimator.SetInteger("AnimationState", (int)State.Idle);
+        }
         else
-            mCurrentState = State.Move;
+        {
+            mAnimator.SetInteger("AnimationState", (int)State.Move);
+        }
 
-        mAnimator.SetInteger("AnimationState", (int)mCurrentState);
     }
     private void UpdateAttack()
     {
@@ -166,23 +170,31 @@ public class HeroController : MonoBehaviour
         else
         {
             mAgent.transform.forward = Vector3.Normalize(mTargetHealth.transform.position - transform.position);
-            
-            if(mNextAttackTime < Time.time)
-            {
-                mWeapon.Use(mTargetHealth);
-                mAnimator.SetTrigger("Attack");
-                mNextAttackTime = Time.time + (1.0f / mAttackRate);
-            }
-            else
-            {
-                
-                mAnimator.ResetTrigger("Attack");
+            mAgent.SetDestination(transform.position);
 
+            var animationState = mAnimator.GetInteger("AnimationState");
+            if (animationState != (int)State.Idle && animationState != (int)State.Attack1)
+            {
+                mAnimator.SetInteger("AnimationState", (int)State.Idle);
+            }
+            else if (mNextAttackTime < Time.time)
+            {
+                mAnimator.SetInteger("AnimationState", (int)State.Attack1);
+                mAnimator.SetTrigger("Attack");
+
+                mNextAttackTime = Time.time + (1.0f / mAttackRate);
             }
         }
     }
 
     private void UpdateDeath()
     {
+    }
+
+    public void OnAttack()
+    {
+        if(mTargetHealth && mTargetHealth.IsAlive())
+           mWeapon.Use(mTargetHealth);
+
     }
 }
