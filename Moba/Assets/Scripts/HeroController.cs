@@ -159,6 +159,9 @@ public class HeroController : NetworkBehaviour
     {
         var targetH = NetworkServer.FindLocalObject(target);
 
+        if (targetH == null)
+            targetH = ClientScene.FindLocalObject(target);
+
         if(targetH)
         {
             var healthC = targetH.GetComponent<Health>();
