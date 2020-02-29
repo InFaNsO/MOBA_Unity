@@ -1066,3 +1066,17 @@ D:\BhavCode\Github\MOBA_Unity\Moba\obj\Debug\Assembly-CSharp.csproj.CoreCompileI
 D:\BhavCode\Github\MOBA_Unity\Moba\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 D:\BhavCode\Github\MOBA_Unity\Moba\obj\Debug\Assembly-CSharp.dll
 D:\BhavCode\Github\MOBA_Unity\Moba\obj\Debug\Assembly-CSharp.pdb
+D:\BhavCode\Github\MOBA_Unity\Moba\Temp\bin\Debug\com.unity.multiplayer-hlapi.Editor.dll
+D:\BhavCode\Github\MOBA_Unity\Moba\Temp\bin\Debug\com.unity.multiplayer-hlapi.Runtime.dll
+D:\BhavCode\Github\MOBA_Unity\Moba\Temp\bin\Debug\com.unity.multiplayer-weaver.Editor.dll
+D:\BhavCode\Github\MOBA_Unity\Moba\Temp\bin\Debug\Unity.Timeline.Editor.pdb
+D:\BhavCode\Github\MOBA_Unity\Moba\Temp\bin\Debug\Unity.TerrainTools.pdb
+D:\BhavCode\Github\MOBA_Unity\Moba\Temp\bin\Debug\Unity.TextMeshPro.Editor.pdb
+D:\BhavCode\Github\MOBA_Unity\Moba\Temp\bin\Debug\Unity.Timeline.pdb
+D:\BhavCode\Github\MOBA_Unity\Moba\Temp\bin\Debug\Unity.CollabProxy.Editor.pdb
+D:\BhavCode\Github\MOBA_Unity\Moba\Temp\bin\Debug\Unity.TextMeshPro.pdb
+D:\BhavCode\Github\MOBA_Unity\Moba\Temp\bin\Debug\Unity.TerrainTools.Editor.pdb
+D:\BhavCode\Github\MOBA_Unity\Moba\Temp\bin\Debug\Unity.Analytics.DataPrivacy.pdb
+D:\BhavCode\Github\MOBA_Unity\Moba\Temp\bin\Debug\com.unity.multiplayer-hlapi.Editor.pdb
+D:\BhavCode\Github\MOBA_Unity\Moba\Temp\bin\Debug\com.unity.multiplayer-weaver.Editor.pdb
+D:\BhavCode\Github\MOBA_Unity\Moba\Temp\bin\Debug\com.unity.multiplayer-hlapi.Runtime.pdb

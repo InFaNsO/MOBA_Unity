@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Networking;
 
-public class HeroController : MonoBehaviour
+public class HeroController : NetworkBehaviour
 {
     enum Command
     {
@@ -39,13 +40,14 @@ public class HeroController : MonoBehaviour
     private Team mTeam;
 
     private State mCurrentState = State.Idle;
+    
 
     [SerializeField] float mAttackRate = 1.0f;
     [SerializeField] float mAttackRange = 1.0f;
     float mNextAttackTime = 1.0f;
 
-    MoveCommand mMoveCommand;
-    AttackCommand mAttackCommand;
+    [SyncVar] MoveCommand mMoveCommand;
+              AttackCommand mAttackCommand;
 
     // Start is called before the first frame update
     void Start()
@@ -61,8 +63,8 @@ public class HeroController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        switch (CheckInputCommand())
+        Command command = CheckInputCommand();
+        switch (command)
         {
             case Command.none:
                 break;
@@ -99,7 +101,7 @@ public class HeroController : MonoBehaviour
 
     private Command CheckInputCommand()
     {
-        if (Input.GetMouseButton(1))
+        if (hasAuthority && Input.GetMouseButton(1))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -125,15 +127,46 @@ public class HeroController : MonoBehaviour
 
     private void ProcessMoveCommand()
     {
-        mCurrentState = State.Move;
-        mAgent.SetDestination(mMoveCommand.destination);
+        Cmd_Move(mMoveCommand.destination);
     }
+    
+    [Command] void Cmd_Move(Vector3 destination)
+    {
+        Rpc_Move(destination);
+    }
+    [ClientRpc] void Rpc_Move(Vector3 destination)
+    {
+        mCurrentState = State.Move;
+        mAgent.SetDestination(destination);
+    }
+
     private void ProcessAttackCommand()
     {
         if(mAttackCommand.targetHealth)
         {
-            mCurrentState = State.Attack1;
-            mTargetHealth = mAttackCommand.targetHealth;
+            Cmd_Attack(mAttackCommand.targetHealth.netId);
+        }
+    }
+
+    [Command]
+    void Cmd_Attack(NetworkInstanceId target)
+    {
+        Rpc_Attack(target);
+    }
+
+    [ClientRpc]
+    void Rpc_Attack(NetworkInstanceId target)
+    {
+        var targetH = NetworkServer.FindLocalObject(target);
+
+        if(targetH)
+        {
+            var healthC = targetH.GetComponent<Health>();
+            if(healthC)
+            {
+                mCurrentState = State.Attack1;
+                mTargetHealth = healthC;
+            }
         }
     }
 
@@ -195,6 +228,5 @@ public class HeroController : MonoBehaviour
     {
         if(mTargetHealth && mTargetHealth.IsAlive())
            mWeapon.Use(mTargetHealth);
-
     }
 }
