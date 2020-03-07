@@ -30,11 +30,19 @@ public class EnemyController : MonoBehaviour
     private WayPointPath path;
     private int nextPathIndex = 0;
     //private bool isDying;
-    [SyncVar] State currentState = State.MoveToNextPoint;
+    State currentState = State.MoveToNextPoint;
     private TargetingSystem targeting;
     Vector3 wayPointOffset;
 
     Weapon weapon;
+
+    Animator myAnimator;
+
+    const int animStateIdle = 0;
+    const int animStateMove = 1;
+    const int animStateAttack = 2;
+    const int animStateDie = 3;
+
 
     public void Start()
     {
@@ -42,11 +50,12 @@ public class EnemyController : MonoBehaviour
         health = GetComponent<Health>();
         targeting = GetComponent<TargetingSystem>();
         weapon = GetComponent<Weapon>();
+        myAnimator = GetComponentInChildren<Animator>();
     }
 
     void Update()
     {
-        switch (currentState)
+            switch (currentState)
         {
             case State.MoveToNextPoint:
                 UpdateMoveTo();
@@ -61,6 +70,12 @@ public class EnemyController : MonoBehaviour
                 UpdateDie();
                 break;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawSphere(agent.destination, 0.5f);
     }
 
     void UpdateMoveTo()
@@ -82,7 +97,7 @@ public class EnemyController : MonoBehaviour
     }
     [ClientRpc] void Rpc_Move(Vector3 destination)
     {
-        mCurrentState = State.Move;
+        //mCurrentState = State.Move;
         agent.SetDestination(destination);
     }
 
@@ -100,10 +115,16 @@ public class EnemyController : MonoBehaviour
         if (CheckDying() || NoTarget() || TargetOutOfRange())
             return;
 
+        //face the target
+        agent.transform.forward = Vector3.Normalize(targeting.GetCurrentTarget().transform.position - transform.position);
+        agent.SetDestination(agent.transform.position);
+
         if(nextAttackTime < Time.time)
         {
-            weapon.Use(targeting.GetCurrentTarget());
-            nextAttackTime = Time.time +  (1.0f / attackTime);
+            myAnimator.SetInteger("AnimationState", animStateAttack);
+            myAnimator.SetTrigger("Attack");
+
+            nextAttackTime = Time.time + (1.0f / attackTime);
         }
     }
 
@@ -111,6 +132,7 @@ public class EnemyController : MonoBehaviour
     {
         Vector3 position = transform.position;
         position.y = Mathf.Lerp(transform.position.y, transform.position.y - -5.0f, Time.deltaTime);
+
         transform.position = position;
 
         if (transform.position.y >= 50.0f)
@@ -121,6 +143,7 @@ public class EnemyController : MonoBehaviour
     {
         if (!health.IsAlive())
         {
+            myAnimator.SetInteger("AnimationState", animStateDie);
             GetComponent<Collider>().enabled = false;
             agent.enabled = false;
             currentState = State.Dying;
@@ -133,8 +156,10 @@ public class EnemyController : MonoBehaviour
     {
         targeting.UpdateTarget();
         if (targeting.GetCurrentTarget())
+        {
+            myAnimator.SetInteger("AnimationState", animStateMove);
             currentState = State.ChaseTarget;
-
+        }
         return targeting.GetCurrentTarget();
     }
 
@@ -142,8 +167,10 @@ public class EnemyController : MonoBehaviour
     {
         targeting.UpdateTarget();
         if (!targeting.GetCurrentTarget())
+        {
             currentState = State.MoveToNextPoint;
-
+            myAnimator.SetInteger("AnimationState", animStateMove);
+        }
         return targeting.GetCurrentTarget();
     }
 
@@ -152,7 +179,9 @@ public class EnemyController : MonoBehaviour
         var target = targeting.GetCurrentTarget();
         if (Vector3.Distance(target.transform.position, transform.position) < attackRange)
         {
+            Debug.Log("lets attack");
             currentState = State.AttackTarget;
+            myAnimator.SetInteger("AnimationState", animStateIdle);
             return true;
         }
         return false;
@@ -160,8 +189,9 @@ public class EnemyController : MonoBehaviour
     bool TargetOutOfRange()
     {
         var target = targeting.GetCurrentTarget();
-        if (Vector3.Distance(target.transform.position, transform.position) > attackRange)
+        if (Vector3.Distance(target.transform.position, transform.position) >= attackRange)
         {
+            myAnimator.SetInteger("AnimationState", animStateMove);
             currentState = State.ChaseTarget;
             return true;
         }
@@ -175,6 +205,8 @@ public class EnemyController : MonoBehaviour
 
         wayPointOffset = transform.position - path.GetWaypoint(nextPathIndex);
         wayPointOffset.y = 0.0f;
+        myAnimator.SetInteger("AnimationState", animStateMove);
+        Debug.Log("offset: " + wayPointOffset.ToString());
     }
 
 
@@ -191,5 +223,14 @@ public class EnemyController : MonoBehaviour
     [ClientRpc] void Rpc_ChangeState(State s)
     {
 
+    }
+
+    public void OnAttack()
+    {
+        var target = targeting.GetCurrentTarget();
+        if (target && target.IsAlive())
+        {
+            weapon.Use(target);
+        }
     }
 }

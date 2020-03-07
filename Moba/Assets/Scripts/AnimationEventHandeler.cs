@@ -5,11 +5,13 @@ using UnityEngine;
 public class AnimationEventHandeler : MonoBehaviour
 {
     HeroController myHero;
+    EnemyController myEnemy;
 
     // Start is called before the first frame update
     void Start()
     {
         myHero = GetComponentInParent<HeroController>();
+        myEnemy = GetComponentInParent<EnemyController>();
     }
 
     public void OnAttack()
@@ -17,6 +19,10 @@ public class AnimationEventHandeler : MonoBehaviour
         if(myHero)
         {
             myHero.OnAttack();
+        }
+        else if(myEnemy)
+        {
+            myEnemy.OnAttack();
         }
     }
 }

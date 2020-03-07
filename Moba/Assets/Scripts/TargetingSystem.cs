@@ -21,11 +21,11 @@ public class TargetingSystem : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponentInParent<Team>().faction == team.faction || other.GetComponentInParent<Team>() == null)
+        if (other.GetComponentInParent<Team>() == null || other.GetComponentInParent<Team>().faction == team.faction)
             return;
 
         targetInRange.Add(other.GetComponentInParent<Health>());
-        Debug.Log("[TowerController] Adding target: " + other.name);
+        Debug.Log("[TargetingSystem] Adding target: " + other.name);
     }
 
     private void OnTriggerExit(Collider other)
@@ -35,7 +35,7 @@ public class TargetingSystem : MonoBehaviour
 
         var otherHealth = other.GetComponentInParent<Health>();
         targetInRange.Remove(other.GetComponentInParent<Health>());
-        Debug.Log("[TowerController] Removing target: " + other.name);
+        Debug.Log("[TargetingSystem] Removing target: " + other.name);
 
         // If my current target just left, stop targeting it
         if (true)
