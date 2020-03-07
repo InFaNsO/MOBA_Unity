@@ -2,9 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Networking;
 
 public class EnemyController : MonoBehaviour
 {
+    enum Command
+    {
+
+    }
+
     enum State
     {
         MoveToNextPoint,
@@ -24,7 +30,7 @@ public class EnemyController : MonoBehaviour
     private WayPointPath path;
     private int nextPathIndex = 0;
     //private bool isDying;
-    State currentState = State.MoveToNextPoint;
+    [SyncVar] State currentState = State.MoveToNextPoint;
     private TargetingSystem targeting;
     Vector3 wayPointOffset;
 
@@ -69,6 +75,18 @@ public class EnemyController : MonoBehaviour
         }
         agent.SetDestination(path.GetWaypoint(nextPathIndex) + wayPointOffset);
     }
+
+    [Command] void Cmd_Move(Vector3 destination)
+    {
+        Rpc_Move(destination);
+    }
+    [ClientRpc] void Rpc_Move(Vector3 destination)
+    {
+        mCurrentState = State.Move;
+        agent.SetDestination(destination);
+    }
+
+
     void UpdateChase()
     {
         if (CheckDying() || NoTarget() || TargetInRange())
@@ -139,7 +157,6 @@ public class EnemyController : MonoBehaviour
         }
         return false;
     }
-
     bool TargetOutOfRange()
     {
         var target = targeting.GetCurrentTarget();
@@ -158,5 +175,21 @@ public class EnemyController : MonoBehaviour
 
         wayPointOffset = transform.position - path.GetWaypoint(nextPathIndex);
         wayPointOffset.y = 0.0f;
+    }
+
+
+    void ChangeState(State s)
+    {
+
+    }
+
+    [Command] void Cmd_ChangeState(State s)
+    {
+
+    }
+
+    [ClientRpc] void Rpc_ChangeState(State s)
+    {
+
     }
 }
