@@ -4,12 +4,22 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    [SerializeField]float damageAmount = 10.0f;
+    [SerializeField] GameObject ProjectileObj;
+    [SerializeField] Transform ProjectileSpawnPoint;
+
+    [SerializeField] float damageAmount = 10.0f;
 
     public void Use(Health h)
     {
-
-        h.TakeDmg(damageAmount);
+        if(ProjectileObj)
+        {
+            var projectile = Instantiate(ProjectileObj, ProjectileSpawnPoint.position, Quaternion.identity);
+            var cont = projectile.GetComponent<ProjectileController>();
+            cont.SetTarget(h);
+            cont.dmgAmount = damageAmount;
+        }
+        else
+            h.TakeDmg(damageAmount);
     }
 
     // Start is called before the first frame update

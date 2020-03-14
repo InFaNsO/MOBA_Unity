@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class TowerController : MonoBehaviour
+public class TowerController : NetworkBehaviour
 {
     public GameObject projectile;
     public Transform turretTransform;

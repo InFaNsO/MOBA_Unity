@@ -12,8 +12,8 @@ public class PlayerClient : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if(isLocalPlayer)
-            Cmd_SpawnHero();
+        if (isLocalPlayer)
+            GameManager.sInstance.Cmd_AddNewPlayer("testPlayer", "knight", connectionToClient.connectionId );
     }
 
     [Command] void Cmd_SpawnHero()
